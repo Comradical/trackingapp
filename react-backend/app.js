@@ -12,9 +12,9 @@ var express = require('express'),
 var index = require('./routes/index');
 var users = require('./routes/users');
 
-var url = process.env.DATABASEURL || "mongodb://localhost/trackingapp";
 //setup the database we are using
-mongoose.connect(url);
+// var mLabUrl = "mongodb://<brian>:<baseball>@ds133964.mlab.com:33964/roicker";
+// mongoose.connect(mLabUrl);
 
 var app = express();
 
