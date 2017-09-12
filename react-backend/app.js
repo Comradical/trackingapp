@@ -13,8 +13,8 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 
 //setup the database we are using
-// var mLabUrl = "mongodb://<brian>:<baseball>@ds133964.mlab.com:33964/roicker";
-// mongoose.connect(mLabUrl);
+var mLabUrl = "mongodb://brian:baseball@ds133964.mlab.com:33964/roicker";
+mongoose.connect(mLabUrl);
 
 var app = express();
 
