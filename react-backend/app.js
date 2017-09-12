@@ -14,7 +14,9 @@ var users = require('./routes/users');
 
 //setup the database we are using
 var mLabUrl = "mongodb://brian:baseball@ds133964.mlab.com:33964/roicker";
-mongoose.connect(mLabUrl);
+mongoose.connect(mLabUrl, {
+  useMongoClient: true,
+});
 
 var app = express();
 

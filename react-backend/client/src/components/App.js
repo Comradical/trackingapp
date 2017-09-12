@@ -1,23 +1,14 @@
-import React, { Component } from 'react';
-import './App.css';
+import React from 'react';
+import { Component } from 'react';
 
-import CampaignList from '../containers/campaign-list.js';
-import CampaignDetail from '../containers/campaign-detail.js';
-// class App extends Component {
-//   state = {users: []}
-//
-//   componentDidMount() {
-//     fetch('/users')
-//       .then(res => res.json())
-//       .then(users => this.setState({ users }));
-//   }
+import SearchBar from '../containers/search_bar';
 
 export default class App extends Component {
   render() {
     return (
-      <div className="App">
-        <CampaignList />
-        <CampaignDetail />
+      <div>
+        <h1>From tracking app</h1>
+        <SearchBar />
       </div>
     );
   }
