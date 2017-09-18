@@ -19,8 +19,9 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.jsx']
   },
-  devServer: {
+   devServer: {
     historyApiFallback: true,
-    contentBase: './'
+    contentBase: './',
+    public: process.env.C9_HOSTNAME
   }
 };
