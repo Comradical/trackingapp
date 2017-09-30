@@ -1,3 +1,7 @@
+//setup Environment varibles
+require('dotenv').config();
+
+//use packages
 var express = require('express'),
     path = require('path'),
     favicon = require('serve-favicon'),
@@ -18,7 +22,8 @@ var index       = require('./routes/index'),
 //End Route Variables
 
 //setup the database we are using
-var mLabUrl = "mongodb://brian:baseball@ds133964.mlab.com:33964/roicker";
+var mLabUrl = "mongodb://" + process.env.DB_USER + ":" + process.env.DB_PASS + "@" + process.env.DB_HOST;
+
 mongoose.connect(mLabUrl, {
   useMongoClient: true,
 });
