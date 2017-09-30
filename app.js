@@ -1,3 +1,7 @@
+//setup Environment varibles
+require('dotenv').config();
+
+//use packages
 var express = require('express'),
     path = require('path'),
     favicon = require('serve-favicon'),
@@ -9,33 +13,45 @@ var express = require('express'),
     mongoose   = require("mongoose"),
     User = require("./models/user");
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+
+//Route Variables
+var index       = require('./routes/index'),
+    events      = require('./routes/events'),
+    accounts    = require('./routes/accounts'),
+    users       = require('./routes/users');
+//End Route Variables
 
 //setup the database we are using
-var mLabUrl = "mongodb://brian:baseball@ds133964.mlab.com:33964/roicker";
+var mLabUrl = "mongodb://" + process.env.DB_USER + ":" + process.env.DB_PASS + "@" + process.env.DB_HOST;
+
 mongoose.connect(mLabUrl, {
   useMongoClient: true,
 });
 
+//initialize express
 var app = express();
 
-// view engine setup
+// setup view engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Routes
 app.use('/', index);
 app.use('/users', users);
+app.use('/events', events);
+app.use('/accounts', accounts);
+//End Routes
 
-//Authentication
+
+// Authentication    vvvvvvvvvvvvvvvvvvvvv
 app.use(require("express-session")({
     secret: "Once again Rusy wins cutest dog!",
     resave: false,
@@ -47,7 +63,8 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-//End authentication
+//End authentication  ^^^^^^^^^^^^^^^
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

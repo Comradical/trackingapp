@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 var AccountSchema = new mongoose.Schema({
-   name: String,
+   account_name: String,
    campaigns: [
       {
          type: mongoose.Schema.Types.ObjectId,
@@ -13,7 +13,8 @@ var AccountSchema = new mongoose.Schema({
          type: mongoose.Schema.Types.ObjectId,
          ref : "User"
       }
-      ],
+   ],
+   api_key: String,
    created: {type: Date, default: Date.now}
 });
 
