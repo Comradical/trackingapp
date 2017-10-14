@@ -1,10 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var accountfields = [];
-var event = require('../services/events/eventcreator.js');
+var eventHandler = require('../services/events/eventcreator.js');
 
-router.post('/', function(req, res, next){
-    event.create(req.body, accountfields, function(err, success){
+router.post('/', function(req, res){
+    eventHandler.create(req.body, function(err, success){
         if(err){
             res.send(err);
         } else {

@@ -18,6 +18,7 @@ var express = require('express'),
 var index       = require('./routes/index'),
     events      = require('./routes/events'),
     accounts    = require('./routes/accounts'),
+    campaigns   = require('./routes/campaigns'),
     users       = require('./routes/users');
 //End Route Variables
 
@@ -48,6 +49,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/events', events);
 app.use('/accounts', accounts);
+app.use('/campaigns', campaigns);
 //End Routes
 
 
