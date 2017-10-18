@@ -11,7 +11,13 @@ campaignServices.create = function(newCampaign, currentUser, callback){
         creator: {
             id: currentUser._id,
             fullname: fullname
-        }
+        },
+        statistics: {
+            lead_count: 0,
+            customer_count: 0,
+            revenue: 0,
+        },
+        source: newCampaign.source,
     };
     Account.findById(currentUser.account, function(err, account){
        if(err){

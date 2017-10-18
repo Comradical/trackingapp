@@ -6,6 +6,7 @@ var campaignServices = require('../services/services_campaigns');
 
 var currentUser = require("../currentUser");
 
+//  /campaigns routes
 router.post('/', function(req, res){
     campaignServices.create(req.body, currentUser, function(err, success){
         if(err){

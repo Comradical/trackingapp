@@ -9,16 +9,19 @@ var LeadSchema = new mongoose.Schema({
     },
     phone: {type: String},
     created: {type: Date, default: Date.now},
-    campaigns: [{
-         type: mongoose.Schema.Types.ObjectId,
-         ref: "Campaign"
-      }], 
+    campaigns: [
+        {type: mongoose.Schema.Types.ObjectId,
+        ref: "Campaign"
+    }], 
     events: [{
          type: mongoose.Schema.Types.ObjectId,
          ref: "Lead"
     }],
     account_id: {type: String},
-    customerOf: {}
+    customer_of: [
+        {type: mongoose.Schema.Types.ObjectId,
+        ref: "Customer"
+    }], 
 }, { runSettersOnQuery: true });
 
 LeadSchema.path('phone').validate(function (value){

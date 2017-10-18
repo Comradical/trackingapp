@@ -14,7 +14,7 @@ var CampaignSchema = new mongoose.Schema({
       },
       fullname: String,
    },
-    events: [
+   events: [
       {
          type: mongoose.Schema.Types.ObjectId,
          ref: "Event"
@@ -33,10 +33,11 @@ var CampaignSchema = new mongoose.Schema({
       }
    ],
    statistics: {
-      leadCount: Number,
-      customerCount: Number,
-      Revenue: Number
-   }
+      lead_count: Number,
+      customer_count: Number,
+      revenue: Number
+   },
+   source: String
    
 });
 

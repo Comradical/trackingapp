@@ -2,36 +2,61 @@ var eventHandler = {};
 var Event = require('../../models/event');
 var Lead = require('../../models/lead');
 var Campaign = require('../../models/campaign');
-var campaignHandler = require("../campaignhandler");
+var campaignHandler = require('./campaignhandler');
 
 //TODO Exchange callbacks for Promises.
 
-eventHandler.addToCampaign = function(event, lead){
-    let foundCampaign = getCampaign(event);
-    let campaignToAdd = {
-        name: foundCampaign.name,
-        _id: foundCampaign._id
-    };
-    
-
-    
-    if(lead.campaigns[foundCampaign._id]){
-        return true;
-    } else {
-        lead.campaigns[foundCampaign._id] = campaignToAdd;
-        lead.save();
-        campaignHandler.updateLeadCount(event, foundCampaign);
+function addToCampaign(event, lead){
+    //Get Current Campaign
+    getCampaign(event)
+        .then((foundCampaign) => {
+            var campaignToAdd = {
+                name: foundCampaign.name,
+                _id: foundCampaign._id
+            };
+            return campaignToAdd;
+        }).then(addCampaignToLead)
+        .then(updateCampaign);
+    function updateCampaign(campaignResponse){
+        let campaign = campaignResponse.campaign;
+        let newCustomer = campaignResponse.new;
+        if(newCustomer){
+            
+        } 
     }
-};
+        
+        
+    function addCampaignToLead(campaign){
+        var campaignId = campaign._id;
+        var response = {campaign: campaign};
+        if(!(lead.campaigns[campaignId])){
+            //Update Lead to be a part of the campaign
+            lead.campaigns[campaignId] = {
+                name: campaign.name,
+                _id: campaign._id
+            };
+            //Save Lead
+            lead.save();
+            response.new = true;
+            return response;
+        } else {
+        //Return Campaign
+        response.new = false;
+        return response;
+        }
+    }
+}
 
 
 function getCampaign(event){
-    Campaign.findOne({source: event.source}, function(err, foundCampaign){
-        if(err){
-            return err;
-        } else {
-            return foundCampaign;
-        }
+    return new Promise((resolve, reject) => {
+        Campaign.findOne({source: event.source}, function(err, foundCampaign){
+            if(err){
+                reject(err);
+            } else {
+                resolve(foundCampaign);
+            }
+        });
     });
 }
 
@@ -45,25 +70,24 @@ eventHandler.create = function(event, callback){
        if(err){
            callback(err, null);
        } else if(leadFound === true){
-           console.log("it made it to Create event");
-            //if yes run createEventAndUpdateLead
-            createEventAndUpdateLead(event, function(err, newLead){
+            createEventAndUpdateLead(event, function(err, updatedLead){
                 //Mongoose will validate lead data, if there is an error, send the error in the response.
                 if(err){
                     callback(err, null);
                 } else {
+                    addToCampaign(event, updatedLead);
                     //TODO: Change newLead to message response for security
-                    callback(null, newLead);
+                    callback(null, updatedLead);
                 }
             });
        } else {
-           console.log('made it to create Lead');
            //else run createLeadAndEvent
            createLeadAndEvent(event, function(err, newLead){
                 //Mongoose will validate lead data, if there is an error, send the error in the response.
                 if(err){
                     callback(err, null);
                 } else {
+                    addToCampaign(event, newLead);
                     //TODO: Change newLead to message response for security
                     callback(null, newLead);
                 }
@@ -72,7 +96,7 @@ eventHandler.create = function(event, callback){
     });
     
     function createLeadAndEvent(event, callback){
-        var leadToCreate = {email: event.email, account_id: event.account, firstname: event.first_name};
+        var leadToCreate = {email: event.email, account_id: event.account, firstname: event.first_name, campaigns: { 0: true}};
         Lead.create(leadToCreate, function(err, newLead){
            if(err){
                callback(err, null);
@@ -103,9 +127,6 @@ eventHandler.create = function(event, callback){
             });
         } else {
             Lead.findOne({email: event.email, account_id: event.account}, function(err, leadToUpdate){
-                console.log("attempt to find lead");
-                console.log(leadToUpdate);
-                
                 eventCreationHelper(err, leadToUpdate);
             });
         }
@@ -125,7 +146,7 @@ eventHandler.create = function(event, callback){
                         leadToUpdate.events.push(newlyCreatedEvent);
                         leadToUpdate.save();
                         
-                        callback(null, true);
+                        callback(null, leadToUpdate);
                         
                     }
                 });
@@ -134,7 +155,6 @@ eventHandler.create = function(event, callback){
     }
     
     function doesLeadExist(event, callback){
-        console.log("EVENT", event);
         if(event.id){
             //search by id
             //TODO: Create standardized API documentation for fields like "id"
