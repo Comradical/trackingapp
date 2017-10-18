@@ -19,13 +19,26 @@ var CampaignSchema = new mongoose.Schema({
          type: mongoose.Schema.Types.ObjectId,
          ref: "Event"
       }
-      ],
+   ],
    expenses: [
       {
          type: mongoose.Schema.Types.ObjectId,
          ref: "Expenses"
       }
-      ],
+   ],
+   leads: [
+      {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: "Leads"
+      }
+   ],
+   statistics: {
+      lead_count: Number,
+      customer_count: Number,
+      revenue: Number
+   },
+   source: String
+   
 });
 
 

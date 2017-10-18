@@ -1,6 +1,8 @@
 var mongoose = require("mongoose");
 
 var EventSchema = new mongoose.Schema({
+    type: String,
+    value: Number,
     created: {type: Date, default: Date.now},
     source: String,
     campaign: {
