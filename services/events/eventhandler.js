@@ -2,47 +2,88 @@ var eventHandler = {};
 var Event = require('../../models/event');
 var Lead = require('../../models/lead');
 var Campaign = require('../../models/campaign');
-var campaignHandler = require('./campaignhandler');
 
 //TODO Exchange callbacks for Promises.
 
 function addToCampaign(event, lead){
     //Get Current Campaign
     getCampaign(event)
-        .then((foundCampaign) => {
-            var campaignToAdd = {
-                name: foundCampaign.name,
-                _id: foundCampaign._id
-            };
-            return campaignToAdd;
-        }).then(addCampaignToLead)
-        .then(updateCampaign);
-    function updateCampaign(campaignResponse){
-        let campaign = campaignResponse.campaign;
-        let newCustomer = campaignResponse.new;
-        if(newCustomer){
-            
-        } 
+        .then(addCampaignToLead)
+        .then(addCustomer)
+        .then(addRevenue)
+        .then(saveCampaign)
+        .catch((err) => {
+        console.log("there was an error", err);
+        });
+        
+    function addRevenue(campaign){
+        campaign.statistics.revenue += Number(event.value);
+        return campaign;
     }
-        
-        
+    function saveCampaign(campaign){
+        campaign.save();
+        return campaign;
+    }
+    function addCustomer(campaignResponse){
+        let campaign = campaignResponse.campaign;
+        let newCustomer = campaignResponse.newCustomer;
+        let newLead = campaignResponse.newLead;
+        if(newCustomer){
+            campaign.statistics.customer_count++;
+        } 
+        if(newLead){
+            campaign.statistics.lead_count++;
+        }
+        return campaign;
+    }
     function addCampaignToLead(campaign){
         var campaignId = campaign._id;
         var response = {campaign: campaign};
-        if(!(lead.campaigns[campaignId])){
+        
+        if(lead.campaigns.indexOf(campaignId) === -1){
             //Update Lead to be a part of the campaign
-            lead.campaigns[campaignId] = {
-                name: campaign.name,
-                _id: campaign._id
-            };
+            addCampaign(lead)
             //Save Lead
-            lead.save();
-            response.new = true;
-            return response;
+                .then((lead) => {
+                    return lead;
+                })
+                .then(saveLead);
+                response.newLead = true;
+        } else {response.newLead = false;}
+        if(lead.customer_of.indexOf(campaignId) === -1){
+            //Update Lead to be a customer of the campaign
+            makeCustomer(lead)
+            //Save Lead
+                .then((lead) => {
+                    return lead;
+                })
+                .then(saveLead);
+            response.newCustomer = true;
         } else {
+        response.newCustomer = false;
+        }
         //Return Campaign
-        response.new = false;
         return response;
+        
+        function makeCustomer(lead){
+            return new Promise((resolve, reject) => {
+               lead.customer_of.push(campaign);
+               resolve(lead);
+            });
+        }
+        
+        function addCampaign(lead){     
+            return new Promise((resolve, reject) => {
+                lead.campaigns.push(campaign);
+                resolve(lead);
+            });
+        }
+        function saveLead(lead){
+            lead.save(function(err){
+                if(err){
+                    console.log(err);
+                }
+            });
         }
     }
 }
@@ -50,6 +91,7 @@ function addToCampaign(event, lead){
 
 function getCampaign(event){
     return new Promise((resolve, reject) => {
+        //TODO Make this specific to each account
         Campaign.findOne({source: event.source}, function(err, foundCampaign){
             if(err){
                 reject(err);
@@ -96,7 +138,7 @@ eventHandler.create = function(event, callback){
     });
     
     function createLeadAndEvent(event, callback){
-        var leadToCreate = {email: event.email, account_id: event.account, firstname: event.first_name, campaigns: { 0: true}};
+        var leadToCreate = {email: event.email, account_id: event.account, firstname: event.first_name};
         Lead.create(leadToCreate, function(err, newLead){
            if(err){
                callback(err, null);
