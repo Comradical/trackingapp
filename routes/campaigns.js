@@ -1,3 +1,4 @@
+var cors = require('cors')
 var express = require('express');
 var router = express.Router();
 var campaignServices = require('../services/services_campaigns');
@@ -8,14 +9,7 @@ var app = express();
 var currentUser = require("../currentUser");
 
 //Allow cross domain acceess:
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-
-
-
+app.use(cors());
 //  /campaigns routes
 
 // Get Campaigns
