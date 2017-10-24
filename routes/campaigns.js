@@ -1,4 +1,4 @@
-var cors = require('cors')
+var cors = require('cors');
 var express = require('express');
 var router = express.Router();
 var campaignServices = require('../services/services_campaigns');

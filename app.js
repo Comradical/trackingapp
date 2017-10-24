@@ -11,7 +11,9 @@ var express = require('express'),
     passport   = require("passport"),
     LocalStrategy = require("passport-local"),
     mongoose   = require("mongoose"),
-    User = require("./models/user");
+    User = require("./models/user"),
+    cors = require('cors');
+app.use(cors());
 
 
 //Route Variables
