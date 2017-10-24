@@ -6,28 +6,11 @@ import { Link } from 'react-router-dom';
 import NavBar from './partials/navbar';
 
 class PostsIndex extends Component {
-  componentDidMount() {
-    this.props.fetchPosts();
-  }
-  
-  renderPosts(){
-    return _.map(this.props.posts, post => {
-      return (
-        <li className="list-group-item" key={post.id}>
-          {post.title}
-        </li>
-      );
-    });
-  }
-  
   render() {
     return (
       <div>
         <NavBar/>
         <h3>Simple Campaign Tracker</h3>
-        <ul className="list-group">
-          {this.renderPosts()}
-        </ul>
       </div>
     );
   }

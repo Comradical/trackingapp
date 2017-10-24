@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { fetchCampaigns } from '../actions';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
-import CampaignList from './partials/campaign_list';
 import NavBar from './partials/navbar';
 
 class CampaignsPage extends Component {
@@ -11,16 +10,25 @@ class CampaignsPage extends Component {
     this.props.fetchCampaigns();
   }
   renderCampaigns(){
-    _.map(this.props.campaigns, Campaign);
+    return _.map(this.props.campaigns, campaign => {
+      return(
+      <li className="list-group-item">
+        {campaign.name}
+      </li>
+      );
+      
+    });
   }
-  
+    
   render() {
     return (
       <div>
       <div>
         <NavBar/>
         <h3>Your Campaigns:</h3>
-        <CampaignList/>
+        <ul className="list-group">
+          {this.renderCampaigns()}
+        </ul>
       </div>
       </div>
     );
