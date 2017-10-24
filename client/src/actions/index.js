@@ -1,16 +1,16 @@
 import axios from 'axios';
 
-export const FETCH_POSTS = 'fetch_posts';
+export const FETCH_CAMPAIGNS = 'fetch_campaigns';
 export const CREATE_POST = 'create_post';
 
-const ROOT_URL = 'https://reduxblog.herokuapp.com/api';
+const ROOT_URL = 'https://trackingapp-linguistic151.c9users.io';
 const API_KEY = '?key=108954012';
 
-export function fetchPosts() {
-    const request = axios.get(`${ROOT_URL}/posts${API_KEY}`);
+export function fetchCampaigns() {
+    const request = axios.get(`${ROOT_URL}/campaigns`);
     
     return {
-      type: FETCH_POSTS,
+      type: FETCH_CAMPAIGNS,
       payload: request
     };
 }
