@@ -9,14 +9,13 @@ var app = express();
 var currentUser = require("../currentUser");
 
 //Allow cross domain acceess:
-app.use(cors());
 //  /campaigns routes
 
 // Get Campaigns
-router.get('/', (req, res) => {
+router.get('/', cors(), (req, res, next) => {
     campaignServices.fetchCampaigns(currentUser)
     .then((response) => {
-        res.send(response);
+        res.json(response);
     })
     .catch(errorHandler);
     
