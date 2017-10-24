@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
 router.post('/', function(req, res){
     campaignServices.create(req.body, currentUser, function(err, success){
         if(err){
-            res.send(err);
+            errorHandler(err);
         } else {
             res.send(success);
             console.log(success);

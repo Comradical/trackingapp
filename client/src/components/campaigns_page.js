@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchPosts } from '../actions';
+import { fetchCampaigns } from '../actions';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
-import Campaign from './partials/campaign';
+import CampaignList from './partials/campaign_list';
+import NavBar from './partials/navbar';
 
 class CampaignsPage extends Component {
   componentDidMount() {
-    this.props.fetchPosts();
+    this.props.fetchCampaigns();
   }
   renderCampaigns(){
     _.map(this.props.campaigns, Campaign);
@@ -17,10 +18,9 @@ class CampaignsPage extends Component {
     return (
       <div>
       <div>
+        <NavBar/>
         <h3>Your Campaigns:</h3>
-        <ul className="list-group">
-          {this.renderCampaigns()}
-        </ul>
+        <CampaignList/>
       </div>
       </div>
     );
@@ -28,7 +28,7 @@ class CampaignsPage extends Component {
 }
 
 function mapStateToProps(state) {
-  return { posts: state.posts };
+  return { campaigns: state.campaigns };
 }
 
-export default connect(mapStateToProps, { fetchPosts })(CampaignsPage);
+export default connect(mapStateToProps, { fetchCampaigns })(CampaignsPage);

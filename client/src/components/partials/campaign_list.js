@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 
 
 
-export default class Campaign extends Component {
+export default class CampaignList extends Component {
     render() {
         return(
             <li>
-                {this.props.}
+                Hello!
             </li>
         );
     }
