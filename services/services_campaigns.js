@@ -46,4 +46,18 @@ campaignServices.addLead = function(campaignId, callback){
     });
 };
 
+campaignServices.fetchCampaigns = function(currentUser){
+    let id = currentUser.account;
+    return new Promise((resolve, reject) => {
+        Account.findById(id).populate("campaigns").exec(function(err, foundAccount){
+            if(err){
+                reject(err);
+            } else {
+                let response = foundAccount.campaigns;
+                resolve(response);
+            }
+        });
+    });
+};
+
 module.exports = campaignServices;
