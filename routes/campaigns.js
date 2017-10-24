@@ -3,9 +3,18 @@ var router = express.Router();
 var campaignServices = require('../services/services_campaigns');
 var errorHandler = require('../services/errors');
 var app = express();
-// Hardcoded details
 
+// Hardcoded details
 var currentUser = require("../currentUser");
+
+//Allow cross domain acceess:
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+
 
 //  /campaigns routes
 
@@ -47,11 +56,6 @@ router.delete('/:id', function(req, res){
 });
 
 
-//Allow cross domain acceess:
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+
 
 module.exports = router;
