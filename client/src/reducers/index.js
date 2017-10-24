@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
-import PostsReducer from './reducer_posts';
+import CampaignsReducer from './reducer_campaigns';
 
 const rootReducer = combineReducers({
-    posts: PostsReducer,
+    posts: CampaignsReducer,
     form: formReducer
 });
 

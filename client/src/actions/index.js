@@ -3,7 +3,7 @@ import axios from 'axios';
 export const FETCH_CAMPAIGNS = 'fetch_campaigns';
 export const CREATE_POST = 'create_post';
 
-const ROOT_URL = 'https://trackingapp-linguistic151.c9users.io';
+const ROOT_URL = 'https://obscure-temple-12836.herokuapp.com';
 const API_KEY = '?key=108954012';
 
 export function fetchCampaigns() {
