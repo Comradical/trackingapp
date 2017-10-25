@@ -7,12 +7,12 @@ const ROOT_URL = 'https://obscure-temple-12836.herokuapp.com';
 const API_KEY = '?key=108954012';
 
 export function fetchCampaigns() {
-    const request = axios.get(`${ROOT_URL}/campaigns`);
-    
-    return {
-      type: FETCH_CAMPAIGNS,
-      payload: request
-    };
+  const request = axios.get(`${ROOT_URL}/campaigns`);
+  
+  return {
+    type: FETCH_CAMPAIGNS,
+    payload: request
+  };
 }
 
 export function createPost(values, callback) {
