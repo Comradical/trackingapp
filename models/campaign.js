@@ -1,34 +1,35 @@
 var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
 
-var CampaignSchema = new mongoose.Schema({
+var CampaignSchema = new Schema({
    created: {type: Date, default: Date.now},
    name: String,
    account: {
-         type: mongoose.Schema.Types.ObjectId,
+         type: Schema.Types.ObjectId,
          ref: "Account"
       },
    creator: {
       id: {
-         type: mongoose.Schema.Types.ObjectId,
+         type: Schema.Types.ObjectId,
          ref: "User"
       },
       fullname: String,
    },
    events: [
       {
-         type: mongoose.Schema.Types.ObjectId,
+         type: Schema.Types.ObjectId,
          ref: "Event"
       }
    ],
    expenses: [
       {
-         type: mongoose.Schema.Types.ObjectId,
+         type: Schema.Types.ObjectId,
          ref: "Expenses"
       }
    ],
    leads: [
       {
-         type: mongoose.Schema.Types.ObjectId,
+         type: Schema.Types.ObjectId,
          ref: "Leads"
       }
    ],
