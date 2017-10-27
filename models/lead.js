@@ -9,8 +9,8 @@ var LeadSchema = new mongoose.Schema({
     },
     phone: {type: String},
     created: {type: Date, default: Date.now},
-    campaigns: [
-        {type: mongoose.Schema.Types.ObjectId,
+    campaigns: [{
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Campaign"
     }], 
     events: [{

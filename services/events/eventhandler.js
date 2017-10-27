@@ -40,31 +40,37 @@ function addToCampaign(event, lead){
     function addCampaignToLead(campaign){
         var campaignId = campaign._id;
         var response = {campaign: campaign};
-        
-        if(lead.campaigns.indexOf(campaignId) === -1){
-            //Update Lead to be a part of the campaign
+
+        //If the lead is both new and a customer
+        if(lead.campaigns.indexOf(campaignId) === -1 && lead.customer_of.indexOf(campaignId) === -1){
+            //Update Lead to be a part of the campaign & a customer of it
             addCampaign(lead)
-            //Save Lead
-                .then((lead) => {
-                    return lead;
-                })
+            .then(makeCustomer)
+            .then(saveLead);
+            response.newLead = true;
+            response.newCustomer = true;
+        } else { 
+            //If the lead isn't both new and a customer
+            //check to add campaing to lead
+            if(lead.campaigns.indexOf(campaignId) === -1){
+                addCampaign(lead)
                 .then(saveLead);
                 response.newLead = true;
-        } else {response.newLead = false;}
-        if(lead.customer_of.indexOf(campaignId) === -1){
-            //Update Lead to be a customer of the campaign
-            makeCustomer(lead)
-            //Save Lead
-                .then((lead) => {
-                    return lead;
-                })
-                .then(saveLead);
-            response.newCustomer = true;
-        } else {
-        response.newCustomer = false;
+            } else {response.newLead = false;}
+            //check to mark lead as a customer of the campaign
+            if(lead.customer_of.indexOf(campaignId) === -1){
+                //Update Lead to be a customer of the campaign
+                makeCustomer(lead)
+                //Save Lead
+                    .then(saveLead);
+                response.newCustomer = true;
+            } else {
+            response.newCustomer = false;
+            }
         }
         //Return Campaign
         return response;
+        
         
         function makeCustomer(lead){
             return new Promise((resolve, reject) => {
@@ -80,10 +86,11 @@ function addToCampaign(event, lead){
             });
         }
         function saveLead(lead){
-            lead.save(function(err){
+            lead.save(function(err, returnedLead){
                 if(err){
                     console.log(err);
-                }
+                } 
+                return returnedLead;
             });
         }
     }
@@ -108,7 +115,6 @@ eventHandler.create = function(event, callback){
         source: event.source
         //TODO Add functionality so people can map whichever fields they like.
     };
-    // Check if a lead already exists?
     doesLeadExist(event, function(err, leadFound){
        if(err){
            callback(err, null);
@@ -125,14 +131,14 @@ eventHandler.create = function(event, callback){
             });
        } else {
            //else run createLeadAndEvent
-           createLeadAndEvent(event, function(err, newLead){
+           createLeadAndEvent(event, function(err, returnedLead){
                 //Mongoose will validate lead data, if there is an error, send the error in the response.
                 if(err){
                     callback(err, null);
                 } else {
-                    addToCampaign(event, newLead);
+                    addToCampaign(event, returnedLead);
                     //TODO: Change newLead to message response for security
-                    callback(null, newLead);
+                    callback(null, returnedLead);
                 }
            });
        }
@@ -153,9 +159,13 @@ eventHandler.create = function(event, callback){
                         newlyCreatedEvent.save();
                         // add the event to the lead
                         newLead.events.push(newlyCreatedEvent);
-                        newLead.save();
+                        newLead.save(function(err, returnedLead){
+                            if(err){
+                                console.log(err);
+                            }
+                            callback(null, returnedLead);
+                        });
                         
-                        callback(null, newLead);
                         
                     }
                 });
@@ -164,7 +174,7 @@ eventHandler.create = function(event, callback){
     }
     
     function createEventAndUpdateLead(event, callback){
-        if(event.id){
+        if(event.lead_id){
             Lead.findById(event.id, function(err, leadToUpdate){
                 eventCreationHelper(err, leadToUpdate);
             });
@@ -186,7 +196,11 @@ eventHandler.create = function(event, callback){
                         newlyCreatedEvent.lead = leadToUpdate;
                         newlyCreatedEvent.save();
                         // add the event to the lead
+                        console.log("before the push");
+                        console.log(newlyCreatedEvent);
                         leadToUpdate.events.push(newlyCreatedEvent);
+                        console.log("after the push");
+                        console.log(newlyCreatedEvent);
                         leadToUpdate.save();
                         
                         callback(null, leadToUpdate);
