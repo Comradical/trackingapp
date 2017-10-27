@@ -3,7 +3,7 @@ import { reducer as formReducer } from 'redux-form';
 import CampaignsReducer from './reducer_campaigns';
 
 const rootReducer = combineReducers({
-    posts: CampaignsReducer,
+    campaigns: CampaignsReducer,
     form: formReducer
 });
 

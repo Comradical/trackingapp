@@ -3,6 +3,7 @@ var Event = require('../../models/event');
 var Lead = require('../../models/lead');
 var Campaign = require('../../models/campaign');
 
+//TODO Lead Count only Updates if Customer Count Updates
 //TODO Exchange callbacks for Promises.
 
 function addToCampaign(event, lead){
