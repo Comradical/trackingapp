@@ -100,7 +100,7 @@ function addToCampaign(event, lead){
 function getCampaign(event){
     return new Promise((resolve, reject) => {
         //TODO Make this specific to each account
-        Campaign.findOne({source: event.source}, function(err, foundCampaign){
+        Campaign.findOne({source: event.source, account: event.account}, function(err, foundCampaign){
             if(err){
                 reject(err);
             } else {
