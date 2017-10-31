@@ -36,7 +36,8 @@ var CampaignSchema = new Schema({
    statistics: {
       lead_count: Number,
       customer_count: Number,
-      revenue: Number
+      revenue: Number,
+      total_expense: Number
    },
    source: String
    

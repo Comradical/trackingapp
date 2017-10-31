@@ -1,12 +1,11 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-var EventSchema = new Schema({
-    details: Schema.Types.mixed,
+var ErrorSchema = new Schema({
     code: String,
     message: String,
     name: String,
     created: {type: Date, default: Date.now}
 });
 
-module.exports = mongoose.model("Event", EventSchema);
+module.exports = mongoose.model("Error", ErrorSchema);
