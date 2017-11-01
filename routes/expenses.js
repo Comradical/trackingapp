@@ -3,7 +3,7 @@ var router = express.Router({mergeParams: true});
 var currentUser = require('../currentUser');
 var Expense = require('../models/expense');
 var Campaign = require('../models/campaign');
-var Error = require('../services/errors');
+var Err = require('../services/errors');
 
 //TODO add Middleware for verifying API key and account
 router.post('/', function(req, res){
@@ -18,12 +18,12 @@ router.post('/', function(req, res){
             //fix error handling
             console.log(err);
             res.send(err);
-            Error.create(err);
+            Err.create(err);
         } else {
             //create expense
             Expense.create(eventToCreate, (err, newExpense) => {
                 if(err){
-                    Error.create(err);
+                    Err.create(err);
                     console.log(err);
                 } else {
                     //add expense to corresponding campaign

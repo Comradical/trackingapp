@@ -1,11 +1,12 @@
-var Error = require('../models/error');
+var Err = require('../models/error');
 
-function errorHandler(err){
+var errorHandler = {};
+errorHandler.create = function(err){
     let newError = {
         details: err
     };
     
-    Error.create(newError, function(err, createdError){
+    Err.create(newError, function(err, createdError){
         if(err){
             console.log(err);
         }
