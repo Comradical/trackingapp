@@ -20,7 +20,9 @@ var index       = require('./routes/index'),
     events      = require('./routes/events'),
     accounts    = require('./routes/accounts'),
     campaigns   = require('./routes/campaigns'),
-    users       = require('./routes/users');
+    users       = require('./routes/users'),
+    expenses    = require('./routes/expenses'),
+    event_map   = require('./routes/map');
 //End Route Variables
 
 //setup the database we are using
@@ -51,6 +53,8 @@ app.use('/users', users);
 app.use('/events', events);
 app.use('/accounts', accounts);
 app.use('/campaigns', campaigns);
+app.use("/campaigns/:id/expenses", expenses);
+app.use("/maps", event_map);
 //End Routes
 
 

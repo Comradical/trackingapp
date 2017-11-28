@@ -14,6 +14,12 @@ var AccountSchema = new mongoose.Schema({
          ref : "User"
       }
    ],
+   maps: [
+      {
+         type: mongoose.Schema.Types.ObjectId,
+         ref : "Map"
+      }
+   ],
    api_key: String,
    created: {type: Date, default: Date.now}
 });
