@@ -7,6 +7,7 @@ var Account = require('../models/account');
 
 //TODO add Middleware for verifying API key and account
 router.post('/', function(req, res){
+    let toReturn = {};
     new Promise((resolve, reject) => {
         let mapToCreate = {
             title: req.body.title,
@@ -31,15 +32,13 @@ router.post('/', function(req, res){
                         account.maps.push(createdMap);
                         account.save();
                     }
+                    res.send(createdMap);
                 });
-                return createdMap;
+                
             }
-            });
-        
-    }).then((createdMap) => {
-        //TODO this doesn't properly send the new map in the response
-        res.send(createdMap);
-    }).catch((err) => {
+        });
+    })
+    .catch((err) => {
         console.log(err);
         Err.create(err);
     });
