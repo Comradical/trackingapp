@@ -41,7 +41,7 @@ eventHandler.create = function(event, callback){
     });
     
     function createLeadAndEvent(event, callback){
-        var leadToCreate = {email: event.email, account_id: event.account, firstname: event.first_name};
+        var leadToCreate = {email: event.email, account_id: event.account, firstname: event.first_name, lastname: event.last_name};
         Lead.create(leadToCreate, function(err, newLead){
            if(err){
                callback(err, null);

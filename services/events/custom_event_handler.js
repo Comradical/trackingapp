@@ -1,10 +1,11 @@
 var customEvent = {};
 var Map = require('../../models/event_map');
 
-customEvent.create = function (event, mappingId){
+customEvent.map = function (event, mappingId){
     return new Promise((resolve, reject) => {
         let eventToCreate = {};
-        Map.findById(mappingId, (err, map) => {
+        Map.findById(mappingId, (err, foundMap) => {
+            let map = foundMap.mapping;
             if(err){
                 reject(err);
             } else {

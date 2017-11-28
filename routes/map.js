@@ -37,6 +37,7 @@ router.post('/', function(req, res){
             });
         
     }).then((createdMap) => {
+        //TODO this doesn't properly send the new map in the response
         res.send(createdMap);
     }).catch((err) => {
         console.log(err);
