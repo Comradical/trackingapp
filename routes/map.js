@@ -44,6 +44,9 @@ router.post('/', function(req, res){
     });
 });
 
-
+router.post('/test', (req, res) => {
+   console.log(req.body);
+   res.send(req);
+});
 
 module.exports = router;
