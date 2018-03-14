@@ -125,7 +125,7 @@ eventHandler.create = function(event, callback){
             //search by email
             Lead.count({email: event.email, account_id: event.account}, function(err, count){
                 if(count > 0){
-                    //document exists
+                    //document q
                     callback(null, true);
                 } else {
                     callback(null, "NoLead");
@@ -151,8 +151,13 @@ function addToCampaign(event, lead){
         });
         
     function addRevenue(campaign){
-        campaign.statistics.revenue += Number(event.value);
-        return campaign;
+        if(campaign.statistics.hasOwnProperty('revenue') && (event.value)){
+            campaign.statistics.revenue += Number(event.value);
+            return campaign;
+        } else {
+            return campaign;
+        }
+        
     }
     function saveCampaign(campaign){
         campaign.save();

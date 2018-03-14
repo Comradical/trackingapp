@@ -29,7 +29,6 @@ var index       = require('./routes/index'),
 var mLabUrl = "mongodb://" + process.env.DB_USER + ":" + process.env.DB_PASS + "@" + process.env.DB_HOST;
 
 mongoose.connect(mLabUrl, {
-  useMongoClient: true,
 });
 
 //initialize express
