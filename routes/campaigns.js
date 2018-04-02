@@ -18,7 +18,6 @@ router.get('/', cors(), (req, res, next) => {
         res.json(response);
     })
     .catch(errorHandler);
-    
 });
 
 //Create Campaign

@@ -5,17 +5,11 @@ var EventSchema = new mongoose.Schema({
     value: Number,
     created: {type: Date, default: Date.now},
     source: String,
-    campaign: {
-        name: String,
-        id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Campaign"
-        }
-      }, 
+    medium: String,
     lead: {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: "Lead"
-      },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Lead"
+     },
 });
 
 module.exports = mongoose.model("Event", EventSchema);

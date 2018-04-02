@@ -75,7 +75,7 @@ eventHandler.create = function(event, callback){
                 eventCreationHelper(err, leadToUpdate);
             });
         } else {
-            Lead.findOne({email: event.email, account_id: event.account}, function(err, leadToUpdate){
+            Lead.findOne({email: event.email, account_id: event.account}).populate('Campaigns').exec(function(err, leadToUpdate){
                 eventCreationHelper(err, leadToUpdate);
             });
         }
@@ -92,13 +92,8 @@ eventHandler.create = function(event, callback){
                         newlyCreatedEvent.lead = leadToUpdate;
                         newlyCreatedEvent.save();
                         // add the event to the lead
-                        console.log("before the push");
-                        console.log(newlyCreatedEvent);
                         leadToUpdate.events.push(newlyCreatedEvent);
-                        console.log("after the push");
-                        console.log(newlyCreatedEvent);
                         leadToUpdate.save();
-                        
                         callback(null, leadToUpdate);
                         
                     }
@@ -142,6 +137,7 @@ eventHandler.create = function(event, callback){
 function addToCampaign(event, lead){
     //Get Current Campaign
     getCampaign(event)
+        .then(addLeadToCampaign)
         .then(addCampaignToLead)
         .then(addCustomer)
         .then(addRevenue)
@@ -157,7 +153,6 @@ function addToCampaign(event, lead){
         } else {
             return campaign;
         }
-        
     }
     function saveCampaign(campaign){
         campaign.save();
@@ -174,6 +169,14 @@ function addToCampaign(event, lead){
             campaign.statistics.lead_count++;
         }
         return campaign;
+    }
+
+    function addLeadToCampaign(campaign){
+        return new Promise((resolve, reject) => {
+            campaign.leads.addToSet(lead);
+            campaign.save();
+            resolve(campaign);
+        });
     }
     function addCampaignToLead(campaign){
         var campaignId = campaign._id;
@@ -212,7 +215,7 @@ function addToCampaign(event, lead){
         
         function makeCustomer(lead){
             return new Promise((resolve, reject) => {
-               lead.customer_of.push(campaign);
+               lead.customer_of.addToSet(campaign);
                resolve(lead);
             });
         }
@@ -236,7 +239,6 @@ function addToCampaign(event, lead){
 
 function getCampaign(event){
     return new Promise((resolve, reject) => {
-        //TODO Make this specific to each account
         Campaign.findOne({source: event.source, account: event.account}, function(err, foundCampaign){
             if(err){
                 reject(err);

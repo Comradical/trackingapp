@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var Catch = require('../models/catch');
+var Err = require('../services/errors');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -21,5 +23,30 @@ router.post("/register", function(req, res){
     });
 });
 
+
+router.post("/catch", function(req, res){
+    new Promise((resolve, reject) => {
+        let catchToCreate = {
+            data: {}
+        };
+        for(var key in req.body){
+            catchToCreate.data[key] = req.body[key];
+        }
+        console.log(catchToCreate);
+        resolve(catchToCreate);
+    }).then((catchToCreate) => {
+        Catch.create(catchToCreate, function(err, createdCatch){
+            if(err){
+               catchToCreate.reject(err);
+            } else {
+                res.send(createdCatch);
+            }
+        });
+    })
+    .catch((err) => {
+        console.log(err);
+        Err.create(err);
+    });
+});
 
 module.exports = router;

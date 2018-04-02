@@ -11,7 +11,7 @@ var LeadSchema = new mongoose.Schema({
     created: {type: Date, default: Date.now},
     campaigns: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Campaign"
+        ref: "Campaigns"
     }], 
     events: [{
          type: mongoose.Schema.Types.ObjectId,
