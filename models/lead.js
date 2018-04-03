@@ -11,11 +11,11 @@ var LeadSchema = new mongoose.Schema({
     created: {type: Date, default: Date.now},
     campaigns: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Campaigns"
+        ref: "Campaign"
     }], 
     events: [{
          type: mongoose.Schema.Types.ObjectId,
-         ref: "Lead"
+         ref: "Event"
     }],
     account_id: {type: String},
     customer_of: [

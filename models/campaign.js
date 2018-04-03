@@ -24,13 +24,13 @@ var CampaignSchema = new Schema({
    expenses: [
       {
          type: Schema.Types.ObjectId,
-         ref: "Expenses"
+         ref: "Expense"
       }
    ],
    leads: [
       {
          type: Schema.Types.ObjectId,
-         ref: "Leads"
+         ref: "Lead"
       }
    ],
    statistics: {
