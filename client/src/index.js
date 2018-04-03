@@ -10,6 +10,7 @@ import promise from 'redux-promise';
 //routes
 import HomePage from './components/home_page';
 import CampaignsPage from './components/campaigns_page';
+import CampaignShowPage from './components/campaign_show_page';
 
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 
@@ -18,6 +19,7 @@ ReactDOM.render(
     <BrowserRouter>
       <div>
         <Switch>
+          <Route path="/campaigns/:id" component={CampaignShowPage} />
           <Route path="/campaigns" component={CampaignsPage} />
           <Route path="/" component={HomePage} />
         </Switch>
