@@ -32,7 +32,7 @@ router.post('/', function(req, res){
     });
 });
 
-router.get('/:id', function(req, res){
+router.get('/:id', cors(), function(req, res){
    campaignServices.fetchCampaign(req.params.id)
     .then((response) => {
         res.json(response);
