@@ -11,7 +11,9 @@ class CampaignShowPage extends Component {
     this.props.fetchCampaign(campaignId);
   }
   renderCampaign(){
-    return _.map(this.props.campaign, campaign => {
+    let campaign = this.props.campaign;
+    console.log(this.props.campaign);
+    if(campaign.statistics){
       let stats = campaign.statistics;
       let lifetimeValue = (stats.revenue/stats.customer_count).toFixed(2);
       return(
@@ -39,7 +41,9 @@ class CampaignShowPage extends Component {
         </div>
       </li>
       );
-    });
+    } else {
+      return;
+    }
   }
     
   render() {

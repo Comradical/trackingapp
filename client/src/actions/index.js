@@ -9,7 +9,6 @@ const API_KEY = '?key=108954012';
 
 export function fetchCampaigns() {
   const request = axios.get(`${ROOT_URL}/campaigns`);
-  
   return {
     type: FETCH_CAMPAIGNS,
     payload: request
