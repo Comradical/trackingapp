@@ -1,4 +1,6 @@
 var Campaign = require('../models/campaign');
+var Lead = require('../models/lead');
+var expense = require('../models/expense');
 var Account = require('../models/account');
 var campaignServices = {};
 
@@ -54,6 +56,20 @@ campaignServices.fetchCampaigns = function(currentUser){
                 reject(err);
             } else {
                 let response = foundAccount.campaigns;
+                resolve(response);
+            }
+        });
+    });
+};
+
+campaignServices.fetchCampaign = function(campaignId){
+    let id = campaignId
+    return new Promise((resolve, reject) => {
+        Campaign.findById(id).populate("leads").populate("expenses").exec(function(err, foundCampaign){
+            if(err){
+                reject(err);
+            } else {
+                let response = foundCampaign;
                 resolve(response);
             }
         });

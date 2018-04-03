@@ -32,9 +32,12 @@ router.post('/', function(req, res){
     });
 });
 
-router.get('/:id', function(req, res, next){
-   res.send("sorry, not way to view a campaign yet."); 
-   //TODO Create Show Route
+router.get('/:id', function(req, res){
+   campaignServices.fetchCampaign(req.params.id)
+    .then((response) => {
+        res.json(response);
+    })
+    .catch(errorHandler);
 });
 
 router.put('/:id', function(req, res){
