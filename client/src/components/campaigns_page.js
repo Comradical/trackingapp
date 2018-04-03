@@ -18,7 +18,11 @@ class CampaignsPage extends Component {
         <div>
           <div className="row">
             <div className="col-12 col-md-8">
-              <h6>{campaign.name}</h6>
+              <h6>
+                <Link className="nav-item nav-link" to={`/Campaigns/${campaign._id}`}>
+                  {campaign.name}
+                </Link>
+              </h6>
             </div>
             <div className="col-6 col-md-4">
               <p>

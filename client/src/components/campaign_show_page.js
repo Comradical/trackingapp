@@ -7,10 +7,13 @@ import NavBar from './partials/navbar';
 
 class CampaignShowPage extends Component {
   componentDidMount() {
-    this.props.fetchCampaign(this.props.match.params.id);
+    let campaignId = this.props.match.params.id;
+    this.props.fetchCampaign(campaignId);
   }
   renderCampaign(){
-    return _.map(this.props.campaigns, campaign => {
+    let campaign = this.props.campaign;
+    console.log(this.props.campaign);
+    if(campaign.statistics){
       let stats = campaign.statistics;
       let lifetimeValue = (stats.revenue/stats.customer_count).toFixed(2);
       return(
@@ -38,7 +41,9 @@ class CampaignShowPage extends Component {
         </div>
       </li>
       );
-    });
+    } else {
+      return;
+    }
   }
     
   render() {
