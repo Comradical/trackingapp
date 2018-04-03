@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 export const FETCH_CAMPAIGNS = 'fetch_campaigns';
+export const FETCH_CAMPAIGN = 'fetch_campaign';
 export const CREATE_POST = 'create_post';
 
 const ROOT_URL = 'https://obscure-temple-12836.herokuapp.com';
@@ -11,6 +12,15 @@ export function fetchCampaigns() {
   
   return {
     type: FETCH_CAMPAIGNS,
+    payload: request
+  };
+}
+
+export function fetchCampaign(id) {
+  const request = axios.get(`${ROOT_URL}/campaigns/${id}`);
+  
+  return {
+    type: FETCH_CAMPAIGN,
     payload: request
   };
 }
