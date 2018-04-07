@@ -4,45 +4,26 @@ import { fetchCampaigns } from '../actions';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import NavBar from './partials/navbar';
+import Campaign from './partials/campaign';
 
 class CampaignsPage extends Component {
+  constructor(props) {
+    super(props);
+  }
+  
   componentDidMount() {
     this.props.fetchCampaigns();
   }
   renderCampaigns(){
     return _.map(this.props.campaigns, campaign => {
-      let stats = campaign.statistics;
-      let lifetimeValue = (stats.revenue/stats.customer_count).toFixed(2);
-      return(
-      <li className="list-group-item" key={campaign._id}>
-        <div>
-          <div className="row">
-            <div className="col-12 col-md-8">
-              <h6>
-                <Link className="nav-item nav-link" to={`/Campaigns/${campaign._id}`}>
-                  {campaign.name}
-                </Link>
-              </h6>
-            </div>
-            <div className="col-6 col-md-4">
-              <p>
-                Lead Count: {stats.lead_count}
-              </p>
-              <p>
-                Customer Count: {stats.customer_count}
-              </p>
-              <p>
-                Revenue: {stats.revenue}
-              </p>
-              <p>
-                Lifetime Value: ${lifetimeValue}
-              </p>
-            </div>
-          </div>
-        </div>
-      </li>
-      );
+      console.log(campaign);
+    return <Campaign campaignToRender={campaign}/>;
     });
+    // _.map(this.props.campaigns, campaign => {
+    //   return ( 
+    //     <Campaign campaignToRender={campaign}/>
+    //   );
+    // });
   }
     
   render() {
