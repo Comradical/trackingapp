@@ -1,27 +1,11 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import _ from 'lodash';
-import { fetchCampaigns } from '../actions';
 
-class CampaignList extends Component {
-    componentDidMount() {
-        this.props.fetchCampaigns();
-    }
-    renderCampaigns(){
-        _.map(this.props.campaigns, Campaign);
-    }
-    
+export default class CampaignList extends Component {
     render() {
-        return(
-            <li>
-                Hello!
-            </li>
-        );
+        return _.map(this.props.campaignsToRender, campaign => {
+            <Campaign/>
+        });
     }
 }
-
-function mapStateToProps(state) {
-  return { campaigns: state.campaigns };
-}
-
-export default connect(mapStateToProps, { fetchCampaigns })(CampaignList);
