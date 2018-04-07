@@ -17,7 +17,7 @@ class CampaignsPage extends Component {
   renderCampaigns(){
     return _.map(this.props.campaigns, campaign => {
       console.log(campaign);
-    return <Campaign campaignToRender={campaign}/>;
+    return <Campaign campaignToRender={campaign} key={campaign._id}/>;
     });
     // _.map(this.props.campaigns, campaign => {
     //   return ( 
