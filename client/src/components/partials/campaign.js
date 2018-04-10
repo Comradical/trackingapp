@@ -1,35 +1,44 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import ExpenseForm from './expense_form';
 
 const Campaign = (props) => {
   let campaign = props.campaignToRender;
     let stats = campaign.statistics;
+    let costPerLead = Math.round( campaign.statistics.total_expense / stats.lead_count );
     let lifetimeValue = (stats.revenue/stats.customer_count).toFixed(2);
     return(
         <li className="list-group-item" key={campaign._id}>
-            <div>
+            <div className="">
                 <div className="row">
-                    <div className="col-12 col-md-8">
-                        <h6>
-                            <Link className="nav-item nav-link" to={`/Campaigns/${campaign._id}`}>
+                    <div className="fl w-50 pa2">
+                        <h3>
+                            <Link className="f3 lh-title dim blue mv3" to={`/Campaigns/${campaign._id}`}>
                               {campaign.name}
                             </Link>
-                        </h6>
+                        </h3>
+                        <p>
+                        Cost: ${stats.total_expense}
+                      </p>
                     </div>
-                    <div className="col-6 col-md-4">
-                          <p>
-                            Lead Count: {stats.lead_count}
-                          </p>
-                          <p>
-                            Customer Count: {stats.customer_count}
-                          </p>
-                          <p>
-                            Revenue: {stats.revenue}
-                          </p>
-                          <p>
-                            Lifetime Value: ${lifetimeValue}
-                          </p>
+                    <div className="fl w-50 pa2">
+                      <h4 className="f3 lh-title mv3">
+                        CPL: ${costPerLead}
+                      </h4>
+                      <p>
+                        Lead Count: {stats.lead_count}
+                      </p>
+                      <p>
+                        Customer Count: {stats.customer_count}
+                      </p>
+                      <p>
+                        Revenue: {stats.revenue}
+                      </p>
+                      <p>
+                        Lifetime Value: ${lifetimeValue}
+                      </p>
                     </div>
+                    <ExpenseForm/>
                 </div>
             </div>
       </li>

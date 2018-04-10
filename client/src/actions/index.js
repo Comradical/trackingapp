@@ -3,6 +3,7 @@ import axios from 'axios';
 export const FETCH_CAMPAIGNS = 'fetch_campaigns';
 export const FETCH_CAMPAIGN = 'fetch_campaign';
 export const CREATE_POST = 'create_post';
+export const CREATE_EXPENSE = 'create_expense';
 
 const ROOT_URL = 'https://obscure-temple-12836.herokuapp.com';
 const API_KEY = '?key=108954012';
@@ -24,12 +25,21 @@ export function fetchCampaign(id) {
   };
 }
 
-export function createPost(values, callback) {
-  const request = axios.post(`${ROOT_URL}/posts${API_KEY}`, values)
-    .then(() => callback());
+// export function createPost(values, callback) {
+//   const request = axios.post(`${ROOT_URL}/posts${API_KEY}`, values)
+//     .then(() => callback());
+  
+//   return {
+//     type: CREATE_POST,
+//     payload: request
+//   };
+// }
+
+export function createExpense(props){
+  const request = axios.post(`${ROOT_URL}/campaigns${API_KEY}/expenses`, props);
   
   return {
-    type: CREATE_POST,
+    type: CREATE_EXPENSE,
     payload: request
-  };
+  }
 }
