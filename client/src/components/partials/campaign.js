@@ -38,7 +38,7 @@ const Campaign = (props) => {
                         Lifetime Value: ${lifetimeValue}
                       </p>
                     </div>
-                    <ExpenseForm/>
+                    <ExpenseForm campaignToExpense={campaign._id}/>
                 </div>
             </div>
       </li>

@@ -36,7 +36,8 @@ export function fetchCampaign(id) {
 // }
 
 export function createExpense(props){
-  const request = axios.post(`${ROOT_URL}/campaigns${API_KEY}/expenses`, props);
+  console.log(props);
+  const request = axios.post(`${ROOT_URL}/campaigns/${"palceholder"}/expenses`, props);
   
   return {
     type: CREATE_EXPENSE,
