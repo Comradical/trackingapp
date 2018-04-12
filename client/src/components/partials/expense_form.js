@@ -14,10 +14,11 @@ const renderField = ({ input, label, type, meta: { touched, error, warning } }) 
 
 class ExpenseForm extends Component {
     render() {
-        const { fields: {title, date, cost }, handleSubmit } = this.props;
+        const { handleSubmit } = this.props;
+        const { fields: {title, date, cost }} = this.props;
         return(
             <div className="">
-                <form onSubmit={handleSubmit(this.props.createExpense())}>
+                <form onSubmit={handleSubmit(this.props.createExpense)}>
                     <h6>Add an expense</h6>
                     <div className="form-group">
                         <Field label="Title" type="text" className="form-control" name="title" component={renderField}/>
