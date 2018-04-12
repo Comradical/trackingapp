@@ -4,9 +4,10 @@ var currentUser = require('../currentUser');
 var Expense = require('../models/expense');
 var Campaign = require('../models/campaign');
 var Err = require('../services/errors');
+var cors = require('cors');
 
 //TODO add Middleware for verifying API key and account
-router.post('/', function(req, res){
+router.post('/', cors(), function(req, res){
     //prepare to create event
     let eventToCreate = {
         amount: Number(req.body.amount),
