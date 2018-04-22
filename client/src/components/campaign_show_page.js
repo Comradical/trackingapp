@@ -4,6 +4,7 @@ import { fetchCampaign } from '../actions';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import NavBar from './partials/navbar';
+import Campaign from './partials/campaign';
 
 class CampaignShowPage extends Component {
   componentDidMount() {
@@ -12,35 +13,8 @@ class CampaignShowPage extends Component {
   }
   renderCampaign(){
     let campaign = this.props.campaign;
-    console.log(this.props.campaign);
     if(campaign.statistics){
-      let stats = campaign.statistics;
-      let lifetimeValue = (stats.revenue/stats.customer_count).toFixed(2);
-      return(
-      <li className="list-group-item" key={campaign._id}>
-        <div>
-          <div className="row">
-            <div className="col-12 col-md-8">
-              <h6>{campaign.name}</h6>
-            </div>
-            <div className="col-6 col-md-4">
-              <p>
-                Lead Count: {stats.lead_count}
-              </p>
-              <p>
-                Customer Count: {stats.customer_count}
-              </p>
-              <p>
-                Revenue: {stats.revenue}
-              </p>
-              <p>
-                Lifetime Value: ${lifetimeValue}
-              </p>
-            </div>
-          </div>
-        </div>
-      </li>
-      );
+     return <Campaign campaignToRender={campaign} key={campaign._id}/>;
     } else {
       return;
     }

@@ -9,7 +9,7 @@ var cors = require('cors');
 //TODO add Middleware for verifying API key and account
 router.post('/', cors(), function(req, res){
     //prepare to create event
-    let eventToCreate = {
+    let expenseToCreate = {
         amount: Number(req.body.amount),
     };
     console.log(req.params);
@@ -22,7 +22,7 @@ router.post('/', cors(), function(req, res){
             Err.create(err);
         } else {
             //create expense
-            Expense.create(eventToCreate, (err, newExpense) => {
+            Expense.create(expenseToCreate, (err, newExpense) => {
                 if(err){
                     Err.create(err);
                     console.log(err);
@@ -34,7 +34,6 @@ router.post('/', cors(), function(req, res){
                     } else {
                         foundCampaign.statistics.total_expense = newExpense.amount;
                     }
-                    
                     foundCampaign.save();
                     res.send(foundCampaign);
                 }
