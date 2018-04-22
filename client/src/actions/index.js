@@ -37,7 +37,8 @@ export function fetchCampaign(id) {
 
 export function createExpense(props){
   console.log(props);
-  const request = axios.post(`${ROOT_URL}/campaigns/${"palceholder"}/expenses`, props);
+  //TODO Fix this URL to use the actual ID of the campaign and not a fixed ID. Also Use ROOT URL
+  const request = axios.post(`https://trackingapp-linguistic151.c9users.io/campaigns/59e556f651019f13514f4497/expenses`, props);
   
   return {
     type: CREATE_EXPENSE,
