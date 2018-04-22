@@ -37,7 +37,7 @@ export function fetchCampaign(id) {
 
 export function createExpense(props){
   console.log(props);
-  const request = axios.post(`${ROOT_URL}/campaigns/${"palceholder"}/expenses`, props);
+  const request = axios.post(`https://trackingapp-linguistic151.c9users.io/campaigns/59e556f651019f13514f4497/expenses`, props);
   
   return {
     type: CREATE_EXPENSE,

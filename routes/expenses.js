@@ -5,12 +5,18 @@ var Expense = require('../models/expense');
 var Campaign = require('../models/campaign');
 var Err = require('../services/errors');
 var cors = require('cors');
+var app = express();
+
+//TODO research Cors and see if this is a security risk. Should I proxy?
+app.options('*', cors());
 
 //TODO add Middleware for verifying API key and account
 router.post('/', cors(), function(req, res){
     //prepare to create event
     let expenseToCreate = {
-        amount: Number(req.body.amount),
+        amount: Number(req.body.cost),
+        date: req.body.date,
+        title: req.body.title
     };
     console.log(req.params);
     //find corresponding campaign
