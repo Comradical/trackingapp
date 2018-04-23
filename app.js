@@ -14,7 +14,6 @@ var express = require('express'),
     User = require("./models/user");
 
 
-
 //Route Variables
 var index       = require('./routes/index'),
     events      = require('./routes/events'),
@@ -33,6 +32,15 @@ mongoose.connect(mLabUrl, {
 
 //initialize express
 var app = express();
+
+
+
+//TODO research Cors and see if this is a security risk. Should I proxy?
+app.all('/*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
 
 // setup view engine
 app.set('views', path.join(__dirname, 'views'));
