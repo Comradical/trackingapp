@@ -12,13 +12,18 @@ const renderField = ({ input, label, type, meta: { touched, error, warning } }) 
   </div>
 )
 
+
 class ExpenseForm extends Component {
     render() {
         const { handleSubmit } = this.props;
         const { fields: {title, date, cost }} = this.props;
+        const id = this.props.campaignToExpense;
+        let customFormSubmit = function(data){
+            createExpense(data, id);
+        };
         return(
             <div className="">
-                <form onSubmit={handleSubmit(this.props.createExpense)}>
+                <form onSubmit={handleSubmit(customFormSubmit)}>
                     <h6>Add an expense</h6>
                     <div className="form-group">
                         <Field label="Title" type="text" className="form-control" name="title" component={renderField}/>
