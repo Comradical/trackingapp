@@ -8,7 +8,11 @@ var cors = require('cors');
 var app = express();
 
 //TODO research Cors and see if this is a security risk. Should I proxy?
-app.options('*', cors());
+app.all('/*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
 
 //TODO add Middleware for verifying API key and account
 router.post('/', cors(), function(req, res){
