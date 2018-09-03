@@ -38,6 +38,7 @@
   },
   "author": "brianaustgen@gmail.com",
   "license": "UNLICENSED",
+  "private": "true",
   "dependencies": {
     "ajv": "latest",
     "babel-cli": "^6.26.0",
