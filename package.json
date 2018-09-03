@@ -20,7 +20,7 @@
       "babel-register"
     ],
     "exclude": [
-      "exampledoce.js",
+      "**/examplecode.js",
       "**/*.test.js",
       ".nyc_output",
       "coverage",
