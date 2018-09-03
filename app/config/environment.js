@@ -9,7 +9,8 @@ var config = {
   LOOP_REQUEST_PATH: process.env.LOOP_REQUEST_PATH,
   AC_URL: process.env.AC_URL,
   AC_API_KEY: process.env.AC_API_KEY,
-  PASSWORD: process.env.PASSWORD
+  PASSWORD: process.env.PASSWORD,
+  PORT: process.env.PORT
 }
 
 export default config

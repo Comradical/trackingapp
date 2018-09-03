@@ -1,8 +1,9 @@
 import log4js from './config/log4js'
 import app from './config/app'
+import environment from './config/environment'
 
 const logger = log4js.getLogger('startup')
-const port = 'port'
+const port = environment.PORT
 
 let server
 
@@ -11,8 +12,8 @@ const funcs = {
    * Start express service
    */
   start () {
-    server = app.listen(app.get(port), () => {
-      logger.info(`listening port ${app.get(port)}`)
+    server = app.listen(port, () => {
+      logger.info(`listening port ${port}`)
     })
   },
   /**
