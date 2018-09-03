@@ -20,6 +20,7 @@
       "babel-register"
     ],
     "exclude": [
+      "exampledoce.js",
       "**/*.test.js",
       ".nyc_output",
       "coverage",
@@ -36,7 +37,7 @@
     "check-coverage": false
   },
   "author": "brianaustgen@gmail.com",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "dependencies": {
     "ajv": "latest",
     "babel-cli": "^6.26.0",

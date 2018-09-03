@@ -10,7 +10,8 @@ var config = {
   AC_URL: process.env.AC_URL,
   AC_API_KEY: process.env.AC_API_KEY,
   PASSWORD: process.env.PASSWORD,
-  PORT: process.env.PORT
+  PORT: process.env.PORT,
+  SECRET: 'only the best will do'
 }
 
 export default config

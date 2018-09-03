@@ -1,31 +1,32 @@
 //setup Environment varibles
-require('dotenv').config();
+import environment       from './environment'
 
 //use packages
-var express = require('express'),
-    path = require('path'),
-    favicon = require('serve-favicon'),
-    logger = require('morgan'),
-    cookieParser = require('cookie-parser'),
-    bodyParser = require('body-parser'),
-    passport   = require("passport"),
-    LocalStrategy = require("passport-local"),
-    mongoose   = require("mongoose"),
-    User = require("./models/user");
+import express          from 'express'
+import path             from 'path'
+import favicon          from 'serve-favicon'
+import logger           from 'morgan'
+import cookieParser     from 'cookie-parser'
+import bodyParser       from 'body-parser'
+import passport         from 'passport'
+import LocalStrategy    from 'passport-local'
+import mongoose         from 'mongoose'
+import User             from './models/user'
 
 
 //Route Variables
-var index       = require('./routes/index'),
-    events      = require('./routes/events'),
-    accounts    = require('./routes/accounts'),
-    campaigns   = require('./routes/campaigns'),
-    users       = require('./routes/users'),
-    expenses    = require('./routes/expenses'),
-    event_map   = require('./routes/map');
+import health           from './routes/health'
+import index            from './routes/index'
+import events           from './routes/events'
+import accounts         from './routes/accounts'
+import campaigns        from './routes/campaigns'
+import users            from './routes/users'
+import expenses         from './routes/expenses'
+import event_map        from './routes/map'
 //End Route Variables
 
 //setup the database we are using
-var mLabUrl = "mongodb://" + process.env.DB_USER + ":" + process.env.DB_PASS + "@" + process.env.DB_HOST;
+var mLabUrl = 'mongodb://' + process.env.DB_USER + ':' + process.env.DB_PASS + '@' + process.env.DB_HOST;
 
 mongoose.connect(mLabUrl, {
 });
@@ -56,14 +57,14 @@ app.use('/users', users);
 app.use('/events', events);
 app.use('/accounts', accounts);
 app.use('/campaigns', campaigns);
-app.use("/campaigns/:id/expenses", expenses);
-app.use("/maps", event_map);
+app.use('/campaigns/:id/expenses', expenses);
+app.use('/maps', event_map);
 //End Routes
 
 
-// Authentication    vvvvvvvvvvvvvvvvvvvvv
-app.use(require("express-session")({
-    secret: "Once again Rusy wins cutest dog!",
+// Authentication                               vvvvvvvvvvvvvvvvvv
+app.use(require('express-session')({
+    secret: environment.SECRET,
     resave: false,
     saveUninitialized: false
 }));
@@ -73,7 +74,7 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-//End authentication  ^^^^^^^^^^^^^^^
+//End authentication                            ^^^^^^^^^^^^^^^^^^
 
 
 // catch 404 and forward to error handler
