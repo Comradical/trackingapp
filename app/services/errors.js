@@ -1,16 +1,16 @@
-var Err = require('../config/models/error');
+import Err from '../config/models/error'
 
-var errorHandler = {};
-errorHandler.create = function(err){
-    let newError = {
-        details: err
-    };
-    
-    Err.create(newError, function(err, createdError){
-        if(err){
-            console.log(err);
-        }
-    });
+var errorHandler = {}
+errorHandler.create = (err) => {
+  let newError = {
+    details: err
+  }
+
+  Err.create(newError, (err, createdError) => {
+    if (err) {
+      console.log(err)
+    }
+  })
 }
 
-module.exports = errorHandler;
+module.exports = errorHandler

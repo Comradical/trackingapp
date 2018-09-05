@@ -1,44 +1,44 @@
-var Account = require('../config/models/account');
-var api = {};
+import Account from '../config/models/account'
+let api = {}
 
-api.keyCheck = function(req, res, next){
-    var api_key = req.query.api_key;
-    
-    // This line will need to be changed to allow proper access to req.user._id. I don't believe it's working currently.
-    var currentUserId = require('../currentUser').account || req.user._id;
-    Account.findById(currentUserId, function(err, foundAccount){
-        if(err){
-            res.send(err);
-        } else {
-            if(foundAccount.api_key === api_key){
-                console.log("api key matched");
-                next();
-            } else {
-                console.log("Api key mismatch!");
-                console.log (api_key, foundAccount.api_key);
-                res.send("Unable to Authenticate. Please check our credentials.");
-            }
-        }
-    });
-};
+api.keyCheck = (req, res, next) => {
+  let apiKey = req.query.apiKey
 
-api.checkAccount = function(req, res, next){
-    var api_key = req.query.api_key;
-    
-    Account.findById(req.body.account, function(err, foundAccount){
-        if(err){
-            res.send(err);
-        } else {
-            if(foundAccount.api_key === api_key){
-                console.log("api key matched");
-                next();
-            } else {
-                console.log("Api key mismatch!");
-                console.log (api_key, foundAccount.api_key);
-                res.send("Unable to Authenticate. Please check our credentials.");
-            }
-        }
-    });
-};
+  // This line will need to be changed to allow proper access to req.user._id. I don't believe it's working currently.
+  var currentUserId = require('../currentUser').account || req.user._id
+  Account.findById(currentUserId, (err, foundAccount) => {
+    if (err) {
+      res.send(err)
+    } else {
+      if (foundAccount.apiKey === apiKey) {
+        console.log('api key matched')
+        next()
+      } else {
+        console.log('Api key mismatch!')
+        console.log(apiKey, foundAccount.apiKey)
+        res.send('Unable to Authenticate. Please check our credentials.')
+      }
+    }
+  })
+}
 
-module.exports = api;
+api.checkAccount = (req, res, next) => {
+  let apiKey = req.query.apiKey
+
+  Account.findById(req.body.account, (err, foundAccount) => {
+    if (err) {
+      res.send(err)
+    } else {
+      if (foundAccount.apiKey === apiKey) {
+        console.log('api key matched')
+        next()
+      } else {
+        console.log('Api key mismatch!')
+        console.log(apiKey, foundAccount.apiKey)
+        res.send('Unable to Authenticate. Please check our credentials.')
+      }
+    }
+  })
+}
+
+module.exports = api
