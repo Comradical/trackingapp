@@ -1,10 +1,10 @@
-var mongoose = require("mongoose");
+import mongoose from 'mongoose'
 
 var ExpenseSchema = new mongoose.Schema({
-    created: {type: Date, default: Date.now},
-    title: String,
-    date: Date,
-    amount: Number
-});
+  created: {type: Date, default: Date.now},
+  title: String,
+  date: Date,
+  amount: Number
+})
 
-module.exports = mongoose.model("Expense", ExpenseSchema);
+module.exports = mongoose.model('Expense', ExpenseSchema)
