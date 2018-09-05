@@ -1,19 +1,11 @@
-var express = require('express');
-var router = express.Router();
-var api = require('../middleware/auth');
-var campaignServices = require('../../services/services_campaigns');
+import express from 'express'
+import api from '../middleware/auth'
 
+let router = express.Router()
 // Hardcoded details
 
-var currentUser = require("../currentUser");
+router.post('/', api.keyCheck, (req, res) => {
+  res.send('hello there')
+})
 
-
-
-router.post('/', api.keyCheck, function(req, res){
-    res.send("hello there");
-    
-});
-
-
-
-module.exports = router;
+module.exports = router

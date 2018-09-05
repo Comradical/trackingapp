@@ -1,46 +1,43 @@
-var express = require('express');
-var router = express.Router();
-var accountServices = require('../../services/services_accounts');
-var api = require('../../middleware/auth');
-
+import express from 'express'
+import accountServices from '../../services/services_accounts'
+import api from '../../middleware/auth'
 // Hardcoded details
+import currentUser from '../currentUser'
 
-var currentUser = require('../currentUser');
+let router = express.Router()
 
-router.post('/', function(req, res){
-    accountServices.create(req.body, currentUser, function(err, success){
-       if(err){
-           res.send(err);
-       } else {
-           res.send(success);
-       }
-    });
-});
+router.post('/', (req, res) => {
+  accountServices.create(req.body, currentUser, (err, success) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.send(success)
+    }
+  })
+})
 
-router.delete("/:id", function(req, res){
-   accountServices.delete(req.params.id, function(err, success){
-      if(err){
-           res.send(err);
-       } else {
-           res.send(success);
-       } 
-   });
-});
+router.delete('/:id', (req, res) => {
+  accountServices.delete(req.params.id, (err, success) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.send(success)
+    }
+  })
+})
 
-router.put("/:id", api.keyCheck, function(req, res){
-    var detailsToUpdate = {
-        account_name: req.body.account_name
-    };
-    
-    accountServices.edit(req.params.id, detailsToUpdate, function(err, updatedAccount){
-      if(err){
-           res.send(err);
-       } else {
-           res.send(updatedAccount);
-       } 
-   });
-});
+router.put('/:id', api.keyCheck, (req, res) => {
+  var detailsToUpdate = {
+    account_name: req.body.account_name
+  }
 
+  accountServices.edit(req.params.id, detailsToUpdate, (err, updatedAccount) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.send(updatedAccount)
+    }
+  })
+})
 
-
-module.exports = router;
+module.exports = router
