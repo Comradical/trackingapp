@@ -2,6 +2,7 @@ import Event from '../../config/models/event'
 import Lead from '../../config/models/lead'
 import Campaign from '../../config/models/campaign'
 
+// IN PROGRESS
 // TODO Exchange callbacks for Promises.
 
 var eventHandler = {}
@@ -19,7 +20,8 @@ eventHandler.create = (event, callback) => {
     if (err) {
       callback(err, null)
     } else if (leadFound === true) {
-      createEventAndUpdateLead(event, (err, updatedLead) => {
+      createEventAndUpdateLead(event)
+      .then((updatedLead) => {
         // Mongoose will validate lead data, if there is an error, send the error in the response.
         if (err) {
           callback(err, null)
@@ -71,36 +73,37 @@ eventHandler.create = (event, callback) => {
     })
   }
 
-  function createEventAndUpdateLead (event, callback) {
-    if (event.lead_id) {
-      Lead.findById(event.id, (err, leadToUpdate) => {
-        eventCreationHelper(err, leadToUpdate)
-      })
-    } else {
-      Lead.findOne({email: event.email, account_id: event.account}).populate('Campaigns').exec((err, leadToUpdate) => {
-        eventCreationHelper(err, leadToUpdate)
-      })
-    }
-
-    function eventCreationHelper (err, leadToUpdate) {
-      if (err) {
-        callback(err, null)
+  function createEventAndUpdateLead (event) {
+    return new Promise((resolve, reject) => {
+      if (event.lead_id) {
+        Lead.findById(event.id, (err, leadToUpdate) => {
+          eventCreationHelper(err, leadToUpdate)
+        })
       } else {
-        Event.create(newEvent, (err, newlyCreatedEvent) => {
-          if (err) {
-            callback(err, null)
-          } else {
-            // add the lead to the event
-            newlyCreatedEvent.lead = leadToUpdate
-            newlyCreatedEvent.save()
-            // add the event to the lead
-            leadToUpdate.events.push(newlyCreatedEvent)
-            leadToUpdate.save()
-            callback(null, leadToUpdate)
-          }
+        Lead.findOne({email: event.email, account_id: event.account}).populate('Campaigns').exec((err, leadToUpdate) => {
+          eventCreationHelper(err, leadToUpdate)
         })
       }
-    }
+      function eventCreationHelper (err, leadToUpdate) {
+        if (err) {
+          reject(err)
+        } else {
+          Event.create(newEvent, (err, newlyCreatedEvent) => {
+            if (err) {
+              reject(err)
+            } else {
+              // add the lead to the event
+              newlyCreatedEvent.lead = leadToUpdate
+              newlyCreatedEvent.save()
+              // add the event to the lead
+              leadToUpdate.events.push(newlyCreatedEvent)
+              leadToUpdate.save()
+              resolve(leadToUpdate)
+            }
+          })
+        }
+      }
+    })
   }
 
   function doesLeadExist (event, callback) {
