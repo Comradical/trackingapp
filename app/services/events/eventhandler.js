@@ -2,146 +2,151 @@ import Event from '../../config/models/event'
 import Lead from '../../config/models/lead'
 import Campaign from '../../config/models/campaign'
 
+// IN PROGRESS
 // TODO Exchange callbacks for Promises.
 
 var eventHandler = {}
 
-eventHandler.create = (event, callback) => {
-  var newEvent = {
-    source: event.source
-    // TODO Add functionality so people can map whichever fields they like.
-  }
-  let error = {
-    data: null,
-    message: 'Oops, something went wrong!'
-  }
-  doesLeadExist(event, (err, leadFound) => {
-    if (err) {
-      callback(err, null)
-    } else if (leadFound === true) {
-      createEventAndUpdateLead(event, (err, updatedLead) => {
-        // Mongoose will validate lead data, if there is an error, send the error in the response.
-        if (err) {
-          callback(err, null)
-        } else {
-          addToCampaign(event, updatedLead)
-          // TODO: Change newLead to message response for security
-          callback(null, updatedLead)
-        }
-      })
-    } else {
-     // else run createLeadAndEvent
-      createLeadAndEvent(event, (err, returnedLead) => {
-        // Mongoose will validate lead data, if there is an error, send the error in the response.
-        if (err) {
-          callback(err, null)
-        } else {
-          addToCampaign(event, returnedLead)
-          // TODO: Change newLead to message response for security
-          callback(null, returnedLead)
-        }
-      })
+eventHandler.create = (event) => {
+  return new Promise((resolve, reject) =>{
+    var newEvent = {
+      source: event.source
+      // TODO Add functionality so people can map whichever fields they like.
     }
-  })
-
-  function createLeadAndEvent (event, callback) {
-    var leadToCreate = {email: event.email, account_id: event.account, firstname: event.first_name, lastname: event.last_name}
-    Lead.create(leadToCreate, (err, newLead) => {
+    let error = {
+      data: null,
+      message: 'Oops, something went wrong!'
+    }
+    doesLeadExist(event, (err, leadFound) => {
       if (err) {
-        callback(err, null)
+        reject(err)
+      } else if (leadFound === true) {
+        createEventAndUpdateLead(event)
+        .then((updatedLead) => {
+          // Mongoose will validate lead data, if there is an error, send the error in the response.
+          if (err) {
+            reject(err)
+          } else {
+            addToCampaign(event, updatedLead)
+            // TODO: Change newLead to message response for security
+            resolve(updatedLead)
+          }
+        })
       } else {
-        Event.create(newEvent, (err, newlyCreatedEvent) => {
+       // else run createLeadAndEvent
+        createLeadAndEvent(event, (err, returnedLead) => {
+          // Mongoose will validate lead data, if there is an error, send the error in the response.
           if (err) {
             callback(err, null)
           } else {
-            // add the lead to the event
-            newlyCreatedEvent.lead = newLead
-            newlyCreatedEvent.save()
-            // add the event to the lead
-            newLead.events.push(newlyCreatedEvent)
-            newLead.save((err, returnedLead) => {
-              if (err) {
-                console.log(err)
-              }
-              callback(null, returnedLead)
-            })
+            addToCampaign(event, returnedLead)
+            // TODO: Change newLead to message response for security
+            callback(null, returnedLead)
           }
         })
       }
     })
-  }
-
-  function createEventAndUpdateLead (event, callback) {
-    if (event.lead_id) {
-      Lead.findById(event.id, (err, leadToUpdate) => {
-        eventCreationHelper(err, leadToUpdate)
-      })
-    } else {
-      Lead.findOne({email: event.email, account_id: event.account}).populate('Campaigns').exec((err, leadToUpdate) => {
-        eventCreationHelper(err, leadToUpdate)
+  
+    function createLeadAndEvent (event, callback) {
+      var leadToCreate = {email: event.email, account_id: event.account, firstname: event.first_name, lastname: event.last_name}
+      Lead.create(leadToCreate, (err, newLead) => {
+        if (err) {
+          callback(err, null)
+        } else {
+          Event.create(newEvent, (err, newlyCreatedEvent) => {
+            if (err) {
+              callback(err, null)
+            } else {
+              // add the lead to the event
+              newlyCreatedEvent.lead = newLead
+              newlyCreatedEvent.save()
+              // add the event to the lead
+              newLead.events.push(newlyCreatedEvent)
+              newLead.save((err, returnedLead) => {
+                if (err) {
+                  console.log(err)
+                }
+                callback(null, returnedLead)
+              })
+            }
+          })
+        }
       })
     }
-
-    function eventCreationHelper (err, leadToUpdate) {
-      if (err) {
-        callback(err, null)
-      } else {
-        Event.create(newEvent, (err, newlyCreatedEvent) => {
+  
+    function createEventAndUpdateLead (event) {
+      return new Promise((resolve, reject) => {
+        if (event.lead_id) {
+          Lead.findById(event.id, (err, leadToUpdate) => {
+            eventCreationHelper(err, leadToUpdate)
+          })
+        } else {
+          Lead.findOne({email: event.email, account_id: event.account}).populate('Campaigns').exec((err, leadToUpdate) => {
+            eventCreationHelper(err, leadToUpdate)
+          })
+        }
+        function eventCreationHelper (err, leadToUpdate) {
           if (err) {
-            callback(err, null)
+            reject(err)
           } else {
-            // add the lead to the event
-            newlyCreatedEvent.lead = leadToUpdate
-            newlyCreatedEvent.save()
-            // add the event to the lead
-            leadToUpdate.events.push(newlyCreatedEvent)
-            leadToUpdate.save()
-            callback(null, leadToUpdate)
+            Event.create(newEvent, (err, newlyCreatedEvent) => {
+              if (err) {
+                reject(err)
+              } else {
+                // add the lead to the event
+                newlyCreatedEvent.lead = leadToUpdate
+                newlyCreatedEvent.save()
+                // add the event to the lead
+                leadToUpdate.events.push(newlyCreatedEvent)
+                leadToUpdate.save()
+                resolve(leadToUpdate)
+              }
+            })
+          }
+        }
+      })
+    }
+  
+    function doesLeadExist (event, callback) {
+      if (event.id) {
+        // search by id
+        // TODO: Create standardized API documentation for fields like "id"
+        Lead.count({_id: event._id, account_id: event.account}, (err, count) => {
+          if (err) {
+            // TODO add errorhandler here
+            console.log(err)
+          } else {
+            if (count > 0) {
+              // document exists
+              callback(null, true)
+            } else {
+              // ID existed, but document did not exist
+              error.message = 'ID does not exist'
+              callback(error.message, null)
+            }
           }
         })
+      } else if (event.email) {
+        // search by email
+        Lead.count({email: event.email, account_id: event.account}, (err, count) => {
+          if (err) {
+            // TODO add errorhandler here
+            console.log(err)
+          } else {
+            if (count > 0) {
+              // document q
+              callback(null, true)
+            } else {
+              callback(null, 'NoLead')
+            }
+          }
+        })
+      } else {
+        error.message = 'Event was missing a unique identifier. Please make sure to pass an ID or email address'
+        callback(error.message, null)
       }
     }
-  }
-
-  function doesLeadExist (event, callback) {
-    if (event.id) {
-      // search by id
-      // TODO: Create standardized API documentation for fields like "id"
-      Lead.count({_id: event._id, account_id: event.account}, (err, count) => {
-        if (err) {
-          // TODO add errorhandler here
-          console.log(err)
-        } else {
-          if (count > 0) {
-            // document exists
-            callback(null, true)
-          } else {
-            // ID existed, but document did not exist
-            error.message = 'ID does not exist'
-            callback(error.message, null)
-          }
-        }
-      })
-    } else if (event.email) {
-      // search by email
-      Lead.count({email: event.email, account_id: event.account}, (err, count) => {
-        if (err) {
-          // TODO add errorhandler here
-          console.log(err)
-        } else {
-          if (count > 0) {
-            // document q
-            callback(null, true)
-          } else {
-            callback(null, 'NoLead')
-          }
-        }
-      })
-    } else {
-      error.message = 'Event was missing a unique identifier. Please make sure to pass an ID or email address'
-      callback(error.message, null)
-    }
-  }
+  })
 }
 
 function addToCampaign (event, lead) {
