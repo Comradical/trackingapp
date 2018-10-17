@@ -6,12 +6,12 @@ let router = express.Router()
 
 router.post('/', (req, res) => {
   // TODO add Middleware for verifying API key and account
-  eventHandler.create(req.body, (err, success) => {
-    if (err) {
-      res.send(err)
-    } else {
-      res.send(success)
-    }
+  eventHandler.create(req.body)
+  .then((successMessage) => {
+    res.send(successMessage)
+  })
+  .catch((err) => {
+    res.send(err)
   })
 })
 
