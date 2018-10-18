@@ -8,69 +8,74 @@ import Campaign from '../../config/models/campaign'
 var eventHandler = {}
 
 eventHandler.create = (event) => {
-  return new Promise((resolve, reject) =>{
-    var newEvent = {
-      source: event.source
-      // TODO Add functionality so people can map whichever fields they like.
-    }
+  var newEvent = {
+    source: event.source,
+    action: event.action
+    // TODO Add functionality so people can map whichever fields they like.
+  }
+  return new Promise((resolve, reject) => {
     let error = {
       data: null,
       message: 'Oops, something went wrong!'
     }
-    doesLeadExist(event, (err, leadFound) => {
-      if (err) {
-        reject(err)
-      } else if (leadFound === true) {
+    doesLeadExist(event)
+    .then((leadFound) => {
+      if (leadFound === true) {
         createEventAndUpdateLead(event)
         .then((updatedLead) => {
           // Mongoose will validate lead data, if there is an error, send the error in the response.
-          if (err) {
-            reject(err)
-          } else {
-            addToCampaign(event, updatedLead)
-            // TODO: Change newLead to message response for security
-            resolve(updatedLead)
-          }
+          addToCampaign(event, updatedLead)
+          // TODO: Change newLead to message response for security
+          resolve(updatedLead)
+        })
+        .catch((err) => {
+          reject(err)
         })
       } else {
        // else run createLeadAndEvent
-        createLeadAndEvent(event, (err, returnedLead) => {
-          // Mongoose will validate lead data, if there is an error, send the error in the response.
-          if (err) {
-            callback(err, null)
-          } else {
-            addToCampaign(event, returnedLead)
+        createLeadAndEvent(event)
+        // Mongoose will validate lead data, if there is an error, handle it.
+        .then((returnedLead) => {
+          addToCampaign(event, returnedLead)
             // TODO: Change newLead to message response for security
-            callback(null, returnedLead)
-          }
+            resolve(returnedLead)
+        })
+        .catch((err) => {
+          reject(err)
         })
       }
     })
+    .catch((err) => {
+      reject(err)
+    })
+  })
   
-    function createLeadAndEvent (event, callback) {
-      var leadToCreate = {email: event.email, account_id: event.account, firstname: event.first_name, lastname: event.last_name}
-      Lead.create(leadToCreate, (err, newLead) => {
-        if (err) {
-          callback(err, null)
-        } else {
-          Event.create(newEvent, (err, newlyCreatedEvent) => {
-            if (err) {
-              callback(err, null)
-            } else {
-              // add the lead to the event
-              newlyCreatedEvent.lead = newLead
-              newlyCreatedEvent.save()
-              // add the event to the lead
-              newLead.events.push(newlyCreatedEvent)
-              newLead.save((err, returnedLead) => {
-                if (err) {
-                  console.log(err)
-                }
-                callback(null, returnedLead)
-              })
-            }
-          })
-        }
+    function createLeadAndEvent (event) {
+      return new Promise ((resolve, reject) => {
+        var leadToCreate = {email: event.email, account_id: event.account, firstname: event.first_name, lastname: event.last_name}
+        Lead.create(leadToCreate, (err, newLead) => {
+          if (err) {
+           reject(err)
+          } else {
+            Event.create(newEvent, (err, newlyCreatedEvent) => {
+              if (err) {
+                reject(err)
+              } else {
+                // add the lead to the event
+                newlyCreatedEvent.lead = newLead
+                newlyCreatedEvent.save()
+                // add the event to the lead
+                newLead.events.push(newlyCreatedEvent)
+                newLead.save((err, returnedLead) => {
+                  if (err) {
+                    reject(err)
+                  }
+                  resolve(returnedLead)
+                })
+              }
+            })
+          }
+        })
       })
     }
   
@@ -107,8 +112,10 @@ eventHandler.create = (event) => {
       })
     }
   
-    function doesLeadExist (event, callback) {
-      if (event.id) {
+    function doesLeadExist (event) {
+      
+      return new Promise((resolve, reject) => {
+        if (event.id) {
         // search by id
         // TODO: Create standardized API documentation for fields like "id"
         Lead.count({_id: event._id, account_id: event.account}, (err, count) => {
@@ -118,11 +125,13 @@ eventHandler.create = (event) => {
           } else {
             if (count > 0) {
               // document exists
-              callback(null, true)
+              resolve(true)
             } else {
               // ID existed, but document did not exist
-              error.message = 'ID does not exist'
-              callback(error.message, null)
+              let error = {
+                message: 'Event was missing a unique identifier. Please make sure to pass an ID or email address'
+              }
+              reject(error.message)
             }
           }
         })
@@ -135,18 +144,20 @@ eventHandler.create = (event) => {
           } else {
             if (count > 0) {
               // document q
-              callback(null, true)
+              resolve(true)
             } else {
-              callback(null, 'NoLead')
+              resolve(false)
             }
           }
         })
       } else {
-        error.message = 'Event was missing a unique identifier. Please make sure to pass an ID or email address'
-        callback(error.message, null)
+        let error = {
+          message: 'Event was missing a unique identifier. Please make sure to pass an ID or email address'
+        }
+        reject(error.message)
       }
-    }
-  })
+    })
+  }
 }
 
 function addToCampaign (event, lead) {
@@ -189,7 +200,8 @@ function addToCampaign (event, lead) {
   function addLeadToCampaign (campaign) {
     return new Promise((resolve, reject) => {
       campaign.leads.addToSet(lead)
-      campaign.save()
+      // causing parallel save error
+      // campaign.save()
       resolve(campaign)
     })
   }
