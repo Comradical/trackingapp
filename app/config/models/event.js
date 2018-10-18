@@ -5,6 +5,7 @@ var EventSchema = new mongoose.Schema({
   value: Number,
   created: {type: Date, default: Date.now},
   source: String,
+  action: String,
   medium: String,
   lead: {
     type: mongoose.Schema.Types.ObjectId,
