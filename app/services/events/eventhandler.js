@@ -2,17 +2,13 @@ import Event from '../../config/models/event'
 import Lead from '../../config/models/lead'
 import Campaign from '../../config/models/campaign'
 
-// IN PROGRESS
-// TODO Exchange callbacks for Promises.
+// This file is the master path a new event to the server will take. Code in here should be easy to understand.
 
 var eventHandler = {}
 
 eventHandler.create = (event) => {
-  var newEvent = {
-    source: event.source,
-    action: event.action
-    // TODO Add functionality so people can map whichever fields they like.
-  }
+  let newEvent = event
+  
   return new Promise((resolve, reject) => {
     let error = {
       data: null,
@@ -87,6 +83,7 @@ eventHandler.create = (event) => {
           })
         } else {
           Lead.findOne({email: event.email, account_id: event.account}).populate('Campaigns').exec((err, leadToUpdate) => {
+            //TODO allow the updating of individual lead fields. i.e. First name, last name,
             eventCreationHelper(err, leadToUpdate)
           })
         }
