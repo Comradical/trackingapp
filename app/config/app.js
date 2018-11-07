@@ -91,4 +91,12 @@ app.use((err, req, res, next) => {
   res.render('error')
 })
 
+
+//TESTING AGGREGATION
+import aggregation from '../aggregatedatabasecall'
+
+aggregation()
+
+//END TEST
+
 module.exports = app
