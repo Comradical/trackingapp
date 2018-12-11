@@ -8,7 +8,7 @@ var eventHandler = {}
 
 eventHandler.create = (event) => {
   let newEvent = event
-  
+
   return new Promise((resolve, reject) => {
     let error = {
       data: null,
@@ -45,7 +45,7 @@ eventHandler.create = (event) => {
       reject(err)
     })
   })
-  
+
     function createLeadAndEvent (event) {
       return new Promise ((resolve, reject) => {
         var leadToCreate = {email: event.email, account_id: event.account, firstname: event.first_name, lastname: event.last_name}
@@ -74,7 +74,7 @@ eventHandler.create = (event) => {
         })
       })
     }
-  
+
     function createEventAndUpdateLead (event) {
       return new Promise((resolve, reject) => {
         if (event.lead_id) {
@@ -108,14 +108,14 @@ eventHandler.create = (event) => {
         }
       })
     }
-  
+
     function doesLeadExist (event) {
-      
+
       return new Promise((resolve, reject) => {
         if (event.id) {
         // search by id
         // TODO: Create standardized API documentation for fields like "id"
-        Lead.count({_id: event._id, account_id: event.account}, (err, count) => {
+        Lead.countDocuments({_id: event._id, account_id: event.account}, (err, count) => {
           if (err) {
             // TODO add errorhandler here
             console.log(err)
@@ -134,7 +134,7 @@ eventHandler.create = (event) => {
         })
       } else if (event.email) {
         // search by email
-        Lead.count({email: event.email, account_id: event.account}, (err, count) => {
+        Lead.countDocuments({email: event.email, account_id: event.account}, (err, count) => {
           if (err) {
             // TODO add errorhandler here
             console.log(err)
